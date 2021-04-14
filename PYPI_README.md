@@ -73,7 +73,7 @@ That's it 😊, **Start your conversation**
 bot.start_bot(bot_model)
 ```
 
-Optional Parameter:
+Optional Parameter:<br>
 `end_conversation` : Contains string to stop the chatbot.
 
 Example: 
