@@ -14,12 +14,12 @@ classifiers = [
 ]
 
 setup(name="aichatbot",
-      version="0.0.2",
+      version="0.0.3",
       description="Python library for building custom AI Chatbot with just one line of code.",
-      url="",
+      url="https://github.com/Elysian01/AI-Chatbot",
       long_description=open("PYPI_README.md", encoding='utf-8').read(),
       long_description_content_type='text/markdown',
-      keywords="exploratory data analysis",
+      keywords="chatbot ai-chatbot bot custom ai-chatbot ai",
       author="Abhishek Manilal Gupta",
       author_email="abhig0209@gmail.com",
       license="MIT",
