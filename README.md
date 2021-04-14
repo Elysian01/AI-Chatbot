@@ -81,12 +81,14 @@ bot.start_bot(bot_model)
 ```
 
 Optional Parameter:<br>
-`end_conversation` : Contains string to stop the chatbot.
+`end_conversation` : Contains strings to stop the chatbot.<br>
+`end_response` : Message when bot quits
 
 Example: 
 ```python
-bot.start_bot(bot_model, end_conversation=["/stop", "quit"])
+bot.start_bot(bot_model, end_conversation=["/stop", "quit"], end_response="Thankyou for your time :)")
 ```
+
 
 
 Python Package: https://pypi.org/project/aichatbot/
