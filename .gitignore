@@ -1,0 +1,11 @@
+# Directories
+datasets
+autoanalysis.egg-info
+dist
+build
+
+## TEMP Files
+__pycache__
+.vscode
+.ipynb_checkpoints
+.idea
