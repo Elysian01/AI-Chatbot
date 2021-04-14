@@ -61,7 +61,7 @@ filenames = {
     "dir": "dumps"
 }
 
-bot_model = bot.CreateBot(filenames, technique="bow")
+bot_model = bot.Create(filenames, technique="bow")
 ```
 
 `intents` : Path to your intents file. <br>
@@ -70,7 +70,7 @@ bot_model = bot.CreateBot(filenames, technique="bow")
 
 That's it 😊, **Start your conversation**
 ```python
-bot.start_bot(bot_model)
+bot.start(bot_model)
 ```
 
 Optional Parameter:<br>
@@ -79,7 +79,7 @@ Optional Parameter:<br>
 
 Example: 
 ```python
-bot.start_bot(bot_model, end_conversation=["/stop", "quit"], end_response="Thankyou for your time :)")
+bot.start(bot_model, end_conversation=["/stop", "quit"], end_response="Thankyou for your time :)")
 ```
 
 

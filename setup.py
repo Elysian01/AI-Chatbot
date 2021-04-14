@@ -14,7 +14,7 @@ classifiers = [
 ]
 
 setup(name="aichatbot",
-      version="0.0.4",
+      version="0.0.5",
       description="Python library for building custom AI Chatbot with just one line of code.",
       url="https://github.com/Elysian01/AI-Chatbot",
       long_description=open("PYPI_README.md", encoding='utf-8').read(),

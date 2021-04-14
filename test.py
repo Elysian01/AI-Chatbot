@@ -5,5 +5,5 @@ filenames = {
     "dir": "dumps"
 }
 
-bot_model = bot.CreateBot(filenames, technique="bow")
-bot.start_bot(bot_model)
+bot_model = bot.Create(filenames, technique="bow")
+bot.start(bot_model)

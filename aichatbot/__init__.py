@@ -2,4 +2,4 @@
 by just specifying expected input and output patterns
 """
 
-from .chatbot import CreateBot, start_bot
+from .chatbot import Create, start

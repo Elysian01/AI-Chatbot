@@ -1,8 +1,8 @@
-import warnings
-import random
 import os
 import sys
 import pickle
+import random
+import warnings
 
 from termcolor import colored
 
@@ -13,13 +13,16 @@ from .techniques.bert import train_bert_model
 warnings.filterwarnings("ignore")
 
 
-class CreateBot:
+class Create:
+    """
+    Creates and Training Chatbot Model
+    """
 
     words_filename = "words.pkl"
     tags_filename = "tags.pkl"
     model_filename = "model.h5"
 
-    def __init__(self, filenames, technique="bow", mappings=None):
+    def __init__(self, filenames: dict, technique: str = "bow", mappings: dict = None):
         self.filenames = filenames
         self.__create_filenames()
         self.mappings = mappings
@@ -38,15 +41,18 @@ class CreateBot:
             os.mkdir(directory)
 
         self.filenames["words"] = os.path.join(
-            directory, CreateBot.words_filename)
+            directory, Create.words_filename)
 
         self.filenames["tags"] = os.path.join(
-            directory, CreateBot.tags_filename)
+            directory, Create.tags_filename)
 
         self.filenames["model"] = os.path.join(
-            directory, CreateBot.model_filename)
+            directory, Create.model_filename)
 
     def __train_model(self):
+        """
+        Train the model
+        """
         if self.technique == "bow":
             self.model = train_bow_model(self.filenames)
         elif self.technique == "lstm":
@@ -59,7 +65,7 @@ class CreateBot:
             sys.exit(1)
 
     def load_files(self):
-        # Loading words, tags and model
+        # Loading words, tags and intents
         self.words = pickle.load(open(self.filenames['words'], "rb"))
         self.tags = pickle.load(open(self.filenames['tags'], "rb"))
         self.intents = get_intents(self.filenames['intents'])
@@ -93,8 +99,23 @@ def predict_tag(bot_model, sentence: str, ERROR_THRESHOLD=0.25) -> list:
     return return_list
 
 
-def start_bot(bot_model, end_conversation=["/stop", "quit"],
-              end_response="Thankyou for your time :)", speech=False):
+def load(model_dir, technique: str = "bow"):
+    """
+    Function to load the created model from a given directory
+    """
+    pass
+
+
+def start(bot_model, end_conversation: list = ["/stop", "quit"],
+          end_response: str = "Thankyou for your time :)", speech: bool = False) -> None:
+    """Funtion ot start the conversation with chatbot.
+
+    Args:
+        bot_model (keras.model): bot created model
+        end_conversation (list, optional): List of string to stop the conversation. Defaults to ["/stop", "quit"].
+        end_response (str, optional): Output message after bot is stopped. Defaults to "Thankyou for your time :)".
+        speech (bool, optional): interaction via speech. Defaults to False.
+    """
 
     print(colored("\nBot is online, start conversation....\n", "red"))
 
@@ -117,5 +138,5 @@ if __name__ == "__main__":
         "dir": "dumps"
     }
 
-    bot_model = CreateBot(filenames, technique="bow")
-    start_bot(bot_model)
+    bot_model = Create(filenames, technique="bow")
+    start(bot_model)
