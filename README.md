@@ -82,7 +82,7 @@ bot.start_bot(bot_model)
 
 Optional Parameter:<br>
 `end_conversation` : Contains strings to stop the chatbot.<br>
-`end_response` : Message when bot quits
+`end_response` : Output Message when bot quits
 
 Example: 
 ```python
