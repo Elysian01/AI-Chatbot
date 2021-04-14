@@ -1,4 +1,4 @@
-# AI-Chatbot
+# AI-Chatbot 🤖 
 
 ### Python library for building custom AI Chatbot with just one line of code.
 
