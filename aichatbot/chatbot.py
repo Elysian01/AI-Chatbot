@@ -1,63 +1,68 @@
 import warnings
 import random
-import nltk
+import os
+import sys
 import pickle
 
-import numpy as np
 from termcolor import colored
-from nltk.stem import WordNetLemmatizer
-from tensorflow.keras.models import load_model
 
-import config
-words_filename, tags_filename, model_filename = config.get_filenames()
-
+from .utils import sent_to_bow_array, get_intents
+from .techniques.bow import train_bow_model
+from .techniques.lstm import train_lstm_model
+from .techniques.bert import train_bert_model
 warnings.filterwarnings("ignore")
 
 
-leammatizer = WordNetLemmatizer()
-intents = config.get_intents()
+class CreateBot:
 
-# Loading words, tags and model
-words = pickle.load(open(words_filename, "rb"))
-tags = pickle.load(open(tags_filename, "rb"))
-model = load_model(model_filename)
+    words_filename = "words.pkl"
+    tags_filename = "tags.pkl"
+    model_filename = "model.h5"
 
+    def __init__(self, filenames, technique="bow", mappings=None):
+        self.filenames = filenames
+        self.__create_filenames()
+        self.mappings = mappings
+        self.technique = technique
 
-def clean_up_sentence(sentence: str) -> list:
-    sentence_words = nltk.word_tokenize(sentence)
-    sentence_words = [leammatizer.lemmatize(word) for word in sentence_words]
-    return sentence_words
+        self.__train_model()
+        self.load_files()
 
+    def __create_filenames(self):
+        """
+        If specified directory doesn't exist, it makes it and it contains 
+        filename for words, tags and model
+        """
+        directory = self.filenames["dir"]
+        if not os.path.exists(directory):
+            os.mkdir(directory)
 
-def bag_of_words(sentence: str):
-    """
-    Convert sentence into bow array
-    """
-    sentence_words = clean_up_sentence(sentence)
-    bag = [0] * len(words)
-    for sentence_word in sentence_words:
-        for i, word_list in enumerate(words):
-            if word_list == sentence_word:
-                bag[i] = 1
+        self.filenames["words"] = os.path.join(
+            directory, CreateBot.words_filename)
 
-    return np.array([bag])
+        self.filenames["tags"] = os.path.join(
+            directory, CreateBot.tags_filename)
 
+        self.filenames["model"] = os.path.join(
+            directory, CreateBot.model_filename)
 
-def predict_tag(sentence: str, ERROR_THRESHOLD=0.25) -> list:
-    bow = bag_of_words(sentence)
-    res = model.predict(bow)[0]
-    results = [[i, r] for i, r in enumerate(res) if r > ERROR_THRESHOLD]
-    results.sort(key=lambda x: x[1], reverse=True)  # sort by prob
+    def __train_model(self):
+        if self.technique == "bow":
+            self.model = train_bow_model(self.filenames)
+        elif self.technique == "lstm":
+            self.model = train_lstm_model(self.filenames)
+        elif self.technique == "bert":
+            self.model = train_bert_model(self.filenames)
+        else:
+            print(colored(
+                "Please specify proper technique\nChoose among [bow | lstm | bert]", "red"))
+            sys.exit(1)
 
-    return_list = []
-    for r in results:
-        return_list.append(
-            {
-                "intent": tags[r[0]],
-                "probability": str(r[1])
-            })
-
-    return return_list
+    def load_files(self):
+        # Loading words, tags and model
+        self.words = pickle.load(open(self.filenames['words'], "rb"))
+        self.tags = pickle.load(open(self.filenames['tags'], "rb"))
+        self.intents = get_intents(self.filenames['intents'])
 
 
 def get_response(intents_list, intents_json):
@@ -71,17 +76,46 @@ def get_response(intents_list, intents_json):
     return result
 
 
-if __name__ == "__main__":
+def predict_tag(bot_model, sentence: str, ERROR_THRESHOLD=0.25) -> list:
+    bow = sent_to_bow_array(sentence, bot_model.words)
+    res = bot_model.model.predict(bow)[0]
+    results = [[i, r] for i, r in enumerate(res) if r > ERROR_THRESHOLD]
+    results.sort(key=lambda x: x[1], reverse=True)  # sort by prob
+
+    return_list = []
+    for r in results:
+        return_list.append(
+            {
+                "intent": bot_model.tags[r[0]],
+                "probability": str(r[1])
+            })
+
+    return return_list
+
+
+def start_bot(bot_model, end_conversation=["/stop", "quit"],
+              end_response="Thankyou for your time :)", speech=False):
+
     print(colored("\nBot is online, start conversation....\n", "red"))
-    end_conversation = ["/stop", "exit"]
 
     while True:
         message = input("> ")
 
         if message in end_conversation:
-            print("Thankyou for your time :)")
+            print(end_response)
             break
 
-        intents_list = predict_tag(message)
-        response = get_response(intents_list, intents)
+        intents_list = predict_tag(bot_model, message)
+        response = get_response(intents_list, bot_model.intents)
         print(colored(response, "blue"))
+
+
+if __name__ == "__main__":
+
+    filenames = {
+        "intents": "./data/basic_intents.json",
+        "dir": "dumps"
+    }
+
+    bot_model = CreateBot(filenames, technique="bow")
+    start_bot(bot_model)

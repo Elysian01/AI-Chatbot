@@ -14,8 +14,8 @@ classifiers = [
 ]
 
 setup(name="aichatbot",
-      version="0.0.1",
-      description="Python library for building custom AI Chatbot in one line, by just specifying expected input and output patterns",
+      version="0.0.2",
+      description="Python library for building custom AI Chatbot with just one line of code.",
       url="",
       long_description=open("PYPI_README.md", encoding='utf-8').read(),
       long_description_content_type='text/markdown',

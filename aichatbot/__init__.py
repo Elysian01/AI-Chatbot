@@ -1,10 +1,5 @@
-"""An Automated Exploratory Data Analysis Library For Machine Learning and Deep Learning in Python.
-
-Classes:
-    MLeda
-    Nlpeda
-    
-Methods:
-    pass
-    
+"""Python library for building custom AI Chatbot in one line, 
+by just specifying expected input and output patterns
 """
+
+from .chatbot import CreateBot, start_bot
