@@ -64,9 +64,9 @@ filenames = {
 bot_model = bot.CreateBot(filenames, technique="bow")
 ```
 
-`intents` : Path to your intents file.
-`dir`: Specify the directory where you want to save the bot model.
-`technique`: Choose among [ bow | lstm | bert ]
+`intents` : Path to your intents file. <br>
+`dir`: Specify the directory where you want to save the bot model.<br>
+`technique`: Choose among [ bow | lstm | bert ]<br>
 
 That's it 😊, **Start your conversation**
 ```python
