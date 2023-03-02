@@ -1,5 +1,7 @@
 # AI-Chatbot 🤖 
 
+[![Downloads](https://static.pepy.tech/personalized-badge/aichatbot?period=total&units=international_system&left_color=black&right_color=orange&left_text=Downloads)](https://pepy.tech/project/aichatbot)
+
 ### Python library for building custom AI Chatbot with just one line of code.
 
 
